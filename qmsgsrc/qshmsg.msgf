@@ -1,0 +1,9 @@
+ /* Create message file for any custom CPF messages */
+ /* Initial use case is to log STDOUT msgs with own CPF ID    */
+             CRTMSGF    MSGF(QSHMSG) TEXT('Qshell CPF +
+                          Messages')
+ /* General CPF message for joblog                  */
+             ADDMSGD    MSGID(QSS9898) MSGF(QSHMSG) +
+                          MSG('&1.') SECLVL('This message is used +
+                          to log QSH console feedback messages.') +
+                          FMT((*CHAR 512)) CCSID(*JOB)                          

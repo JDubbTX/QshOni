@@ -15,9 +15,10 @@ function cpy_member
 # ----------------------------------------------------------------
 # Copy source member and set source type
 # ----------------------------------------------------------------
+  CURFILE=`basename ${CURFILEPATH}`
   SRCMEMBER=`echo "${CURFILE^^}" | cut -d'.' -f1`  # Parse PC file name prefix to member name
   SRCTYPE=`echo "${CURFILE^^}" | cut -d'.' -f2`    # Parse PC file name extenstion to souce type
-  system -v "CPYFRMSTMF FROMSTMF('${PWD}/${CURFILE}') TOMBR('/QSYS.LIB/${SRCLIB}.LIB/${SRCFILE}.FILE/${SRCMEMBER}.MBR') MBROPT(*REPLACE) DBFCCSID(*FILE)"
+  system -v "CPYFRMSTMF FROMSTMF('${PWD}/${CURFILEPATH}') TOMBR('/QSYS.LIB/${SRCLIB}.LIB/${SRCFILE}.FILE/${SRCMEMBER}.MBR') MBROPT(*REPLACE) DBFCCSID(*FILE)"
   system -v "CHGPFM FILE(${SRCLIB}/${SRCFILE}) MBR($SRCMEMBER) SRCTYPE(${SRCTYPE}) TEXT('${SRCTEXT}')" 
 }
 
@@ -30,191 +31,191 @@ system -v "CLRLIB LIB(${SRCLIB})"
 system -v "CRTSRCPF FILE(${SRCLIB}/${SRCFILE}) RCDLEN(120) CCSID(${SRCCCSID})"
 
 # Copy all the source members and set source types
-CURFILE="QSHBASH.CMD"
+CURFILEPATH="qcmdsrc/QSHBASH.CMD"
 SRCTEXT="Run Bash Command via Qshell"
 cpy_member
 
-CURFILE="QSHBASHC.CLLE"              
+CURFILEPATH="qcllesrc/QSHBASHC.CLLE"              
 SRCTEXT="Run Bash Command via Qshell"                            
 cpy_member
 
-CURFILE="QSHEXEC.CMD"                
+CURFILEPATH="qcmdsrc/QSHEXEC.CMD"                
 SRCTEXT="Run QShell Command Line"                          
 cpy_member
 
-CURFILE="QSHEXECC.CLLE"
+CURFILEPATH="qcllesrc/QSHEXECC.CLLE"
 SRCTEXT="Run QShell Command Line"
 cpy_member
 
-CURFILE="QSHLOGSCAC.CLP"
+CURFILEPATH="qclsrc/QSHLOGSCAC.CLP"
 SRCTEXT="Scan Qshell Log File for Value"  
 cpy_member
 
-CURFILE="QSHLOGSCAN.CMD"
+CURFILEPATH="QSHLOGSCAN.CMD"
 SRCTEXT="Scan Qshell Log File for Value"
 cpy_member
 
-CURFILE="QSHLOGSCAR.RPGLE"
+CURFILEPATH="QSHLOGSCAR.RPGLE"
 SRCTEXT="Scan Qshell Log File for Value"
 cpy_member
 
-CURFILE="QSHPATH.CMD"
+CURFILEPATH="QSHPATH.CMD"
 SRCTEXT="Set Open Source Package Path Environment Variables"
 cpy_member
 
-CURFILE="QSHPATHC.CLLE"
+CURFILEPATH="qcllesrc/QSHPATHC.CLLE"
 SRCTEXT="Set Open Source Package Path Environment Variables"
 cpy_member
 
-CURFILE="QSHSTDOUTR.RPGLE"
+CURFILEPATH="QSHSTDOUTR.RPGLE"
 SRCTEXT="Read and parse stdout log"
 cpy_member
 
-CURFILE="QSHIFSCHKR.RPGLE"
+CURFILEPATH="QSHIFSCHKR.RPGLE"
 SRCTEXT="Check for IFS File Existence"
 cpy_member
 
-CURFILE="QSHIFSCHKC.CLP"
+CURFILEPATH="qclsrc/QSHIFSCHKC.CLP"
 SRCTEXT="Check for IFS File Existence"
 cpy_member
 
-CURFILE="QSHIFSCHK.CMD"
+CURFILEPATH="QSHIFSCHK.CMD"
 SRCTEXT="Check for IFS File Existence"
 cpy_member
 
-CURFILE="QSHPYRUN.CMD"
+CURFILEPATH="QSHPYRUN.CMD"
 SRCTEXT="Run Python Script via Qshell"
 cpy_member
 
-CURFILE="QSHPYRUNC.CLLE"
+CURFILEPATH="qcllesrc/QSHPYRUNC.CLLE"
 SRCTEXT="Run Python Script via Qshell"
 cpy_member
 
-CURFILE="QSHDEMO01R.RPGLE"
+CURFILEPATH="QSHDEMO01R.RPGLE"
 SRCTEXT="Read Outfile STDOUTQSH and display via DSPLY cmd"
 cpy_member
 
-CURFILE="QSHQRYTMP.CMD"
+CURFILEPATH="QSHQRYTMP.CMD"
 SRCTEXT="SQL Query Data to Selected Temp Table with RUNSQL"
 cpy_member
 
-CURFILE="QSHQRYTMPC.CLP"
+CURFILEPATH="qclsrc/QSHQRYTMPC.CLP"
 SRCTEXT="SQL Query Data to Selected Temp Table with RUNSQL"
 cpy_member
 
-CURFILE="QSHCURL.CMD"
+CURFILEPATH="QSHCURL.CMD"
 SRCTEXT="Run Curl Command via QShell"
 cpy_member
 
-CURFILE="QSHCURLC.CLP"
+CURFILEPATH="qclsrc/QSHCURLC.CLP"
 SRCTEXT="Run Curl Command via QShell"
 cpy_member
 
-CURFILE="QSHPORTCHK.CMD"
+CURFILEPATH="QSHPORTCHK.CMD"
 SRCTEXT="Check for active TCP/IP Local Port"
 cpy_member
 
-CURFILE="QSHPORTCHC.CLP"
+CURFILEPATH="qclsrc/QSHPORTCHC.CLP"
 SRCTEXT="Check for active TCP/IP Local Port"
 cpy_member
 
-CURFILE="QSHPORTEND.CMD"
+CURFILEPATH="QSHPORTEND.CMD"
 SRCTEXT="End All Jobs for Active TCP/IP Local Port"
 cpy_member
 
-CURFILE="QSHPORTENC.CLP"
+CURFILEPATH="qclsrc/QSHPORTENC.CLP"
 SRCTEXT="End All Jobs for Active TCP/IP Local Port"
 cpy_member
 
-CURFILE="QSHSETPROC.CLP"
+CURFILEPATH="qclsrc/QSHSETPROC.CLP"
 SRCTEXT="Set up .profile, .bash_profile and .bashrc files"
 cpy_member
 
-CURFILE="QSHSETPROF.CMD"
+CURFILEPATH="QSHSETPROF.CMD"
 SRCTEXT="Set up .profile, .bash_profile and .bashrc files"
 cpy_member
 
-CURFILE="QSHBASHRC.TXT"
+CURFILEPATH="QSHBASHRC.TXT"
 SRCTEXT="User .bashrc bash template for Opn Src Pkgs"
 cpy_member
 
-CURFILE="QSHBASHPRF.TXT"
+CURFILEPATH="QSHBASHPRF.TXT"
 SRCTEXT="User .bash_profile bash template for Opn Src Pkgs"
 cpy_member
 
-CURFILE="QSHPROFILE.TXT"
+CURFILEPATH="QSHPROFILE.TXT"
 SRCTEXT="User QShell .profile template for Opn Src Pkgs"
 cpy_member
 
-CURFILE="QSHEXECSRC.CMD"                
+CURFILEPATH="QSHEXECSRC.CMD"                
 SRCTEXT="Run QShell .sh script from Source File Member"
 cpy_member
 
-CURFILE="QSHEXECSCC.CLLE"
+CURFILEPATH="qcllesrc/QSHEXECSCC.CLLE"
 SRCTEXT="Run QShell .sh script from Source File Member"
 cpy_member
 
-CURFILE="DB2UTIL.CMD"                
+CURFILEPATH="DB2UTIL.CMD"                
 SRCTEXT="Execute db2util Query to IFS Output File via bash"
 cpy_member
 
-CURFILE="DB2UTILC.CLLE"
+CURFILEPATH="qcllesrc/DB2UTILC.CLLE"
 SRCTEXT="Execute db2util Query to IFS Output File via bash"
 cpy_member
 
-CURFILE="QSHPYCALL.CMD"
+CURFILEPATH="QSHPYCALL.CMD"
 SRCTEXT="Run Python Script via Qshell and Return Parms"
 cpy_member
 
-CURFILE="QSHPYCALLC.CLLE"
+CURFILEPATH="qcllesrc/QSHPYCALLC.CLLE"
 SRCTEXT="Run Python Script via Qshell and Return Parms"
 cpy_member
 
-CURFILE="QSHPYCALLT.CLLE"
+CURFILEPATH="qcllesrc/QSHPYCALLT.CLLE"
 SRCTEXT="Test Call to QSHPYCALL"
 cpy_member
 
-CURFILE="QSHGETPARM.CMD"
+CURFILEPATH="QSHGETPARM.CMD"
 SRCTEXT="Scan Qshell Log File for Parameter Values"
 cpy_member
 
-CURFILE="QSHGETPARR.RPGLE"
+CURFILEPATH="QSHGETPARR.RPGLE"
 SRCTEXT="Run Python Script via Qshell and Return Parms"
 cpy_member
 
-CURFILE="QSHPHPRUN.CMD"
+CURFILEPATH="QSHPHPRUN.CMD"
 SRCTEXT="Run PHP Script via QShell"
 cpy_member
 
-CURFILE="QSHPHPRUNC.CLLE"
+CURFILEPATH="qcllesrc/QSHPHPRUNC.CLLE"
 SRCTEXT="Run PHP Script via QShell"
 cpy_member
 
-CURFILE="QSHCALL.CMD"
+CURFILEPATH="QSHCALL.CMD"
 SRCTEXT="Run QShell Command Line and Return Parms"
 cpy_member
 
-CURFILE="QSHCALLC.CLLE"
+CURFILEPATH="qcllesrc/QSHCALLC.CLLE"
 SRCTEXT="Run QShell Command Line and Return Parms"
 cpy_member
 
-CURFILE="QSHCALLT.CLLE"
+CURFILEPATH="QSHCALLT.CLLE"
 SRCTEXT="Test Call to QSHCALL"
 cpy_member
 
-CURFILE="QSHCALLT.CLLE"
+CURFILEPATH="qcllesrc/QSHCALLT.CLLE"
 SRCTEXT="Test Call to QSHCALL"
 cpy_member
 
-CURFILE="QSHCPYSRC.CMD"
+CURFILEPATH="QSHCPYSRC.CMD"
 SRCTEXT="Copy Source Member to IFS File"
 cpy_member
 
-CURFILE="QSHCPYSRCC.CLLE"
+CURFILEPATH="qcllesrc/QSHCPYSRCC.CLLE"
 SRCTEXT="Copy Source Member to IFS File"
 cpy_member
 
-CURFILE="SRCBLDC.CLP"
+CURFILEPATH="qclsrc/SRCBLDC.CLP"
 SRCTEXT="Build cmds from QSHONI/SOURCE file"   
 cpy_member
 

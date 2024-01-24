@@ -1,0 +1,3 @@
+ /* Create and set data area for PHP binary location - 1.0.24 */
+             CRTDTAARA  DTAARA(PHPPATH) TYPE(*CHAR) LEN(255) +
+                          VALUE(' ') TEXT('Path to PHP Binaries')

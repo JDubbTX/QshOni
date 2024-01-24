@@ -195,44 +195,44 @@
 
  /* Create message file for any custom CPF messages */
  /* Initial use case is to log STDOUT msgs with own CPF ID    */
-             CRTMSGF    MSGF(&DESTLIB/QSHMSG) TEXT('Qshell CPF +
-                          Messages')
+             /* CRTMSGF    MSGF(&DESTLIB/QSHMSG) TEXT('Qshell CPF +
+                          Messages') */
 
  /* General CPF message for joblog                  */
-             ADDMSGD    MSGID(QSS9898) MSGF(&DESTLIB/QSHMSG) +
+             /* ADDMSGD    MSGID(QSS9898) MSGF(&DESTLIB/QSHMSG) +
                           MSG('&1.') SECLVL('This message is used +
                           to log QSH console feedback messages.') +
-                          FMT((*CHAR 512)) CCSID(*JOB)
+                          FMT((*CHAR 512)) CCSID(*JOB) */
 
  /* Create and set data area for version                      */
-             CRTDTAARA  DTAARA(&DESTLIB/VERSION) TYPE(*CHAR) LEN(30) +
+             /* CRTDTAARA  DTAARA(&DESTLIB/VERSION) TYPE(*CHAR) LEN(30) +
                           VALUE(&VERSION) TEXT(&DESTLIB |> 'version')
              MONMSG     MSGID(CPF0000)
-             CHGDTAARA  DTAARA(&DESTLIB/VERSION *ALL) VALUE(&VERSION)
+             CHGDTAARA  DTAARA(&DESTLIB/VERSION *ALL) VALUE(&VERSION) */
 
  /* Create and set data area for Python binary location - 1.05 */
-             CRTDTAARA  DTAARA(QSHONI/PYPATH) TYPE(*CHAR) LEN(255) +
+             /* CRTDTAARA  DTAARA(QSHONI/PYPATH) TYPE(*CHAR) LEN(255) +
                           VALUE('/QOpenSys/pkgs/bin') TEXT('Path to +
-                          Python Binaries')
+                          Python Binaries') */
 
  /* Create and set data area for Python binary location - 1.0.25 */
-             CHGVAR     VAR(&QSHPYTHON) VALUE('/qshpython')
+             /* CHGVAR     VAR(&QSHPYTHON) VALUE('/qshpython')
              CRTDTAARA  DTAARA(QSHONI/QSHPYTHON) TYPE(*CHAR) +
                           LEN(255) VALUE(&QSHPYTHON) TEXT('Path to +
-                          QSHONI Python Scripts')
+                          QSHONI Python Scripts') */
 
 /* Attempt to create python script directory - V1.0.25 */
              MKDIR      DIR(&QSHPYTHON) DTAAUT(*RWX) OBJAUT(*ALL)
              MONMSG     MSGID(CPF0000)
 
  /* Create and set data area for PHP binary location - 1.0.24 */
-             CRTDTAARA  DTAARA(QSHONI/PHPPATH) TYPE(*CHAR) LEN(255) +
-                          VALUE(' ') TEXT('Path to PHP Binaries')
+             /* CRTDTAARA  DTAARA(QSHONI/PHPPATH) TYPE(*CHAR) LEN(255) +
+                          VALUE(' ') TEXT('Path to PHP Binaries') */
 
  /* Create and set data area for open source path loc - 1.0.9 */
-             CRTDTAARA  DTAARA(QSHONI/QSHPATHLOC) TYPE(*CHAR) +
+             /* CRTDTAARA  DTAARA(QSHONI/QSHPATHLOC) TYPE(*CHAR) +
                           LEN(10) VALUE('*BEGIN') TEXT('Path +
-                          position for open source packages')
+                          position for open source packages') */
 
  /* Change library desc to match the version */
              CHGLIB     LIB(QSHONI) TEXT('QShell on IBM i -' |> +

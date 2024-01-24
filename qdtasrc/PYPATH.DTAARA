@@ -1,0 +1,4 @@
+ /* Create and set data area for Python binary location - 1.05 */
+             CRTDTAARA  DTAARA(PYPATH) TYPE(*CHAR) LEN(255) +
+                          VALUE('/QOpenSys/pkgs/bin') TEXT('Path to +
+                          Python Binaries')
