@@ -1,6 +1,7 @@
-/* Text: Start Postgres Server Instance */
-/* Note: Data in /postgres directory    */
+/* Text: End PostgreSQL Server Instance */
+/* Data in /postgres directory          */
              PGM        PARM(&USERID)
+             DCLPRCOPT  TEXT('End PostgreSQL Server Instance')
              DCL        VAR(&USERID) TYPE(*CHAR) LEN(10)
 
              MONMSG     MSGID(CPF0000) EXEC(GOTO CMDLBL(ERRORS))
@@ -9,22 +10,22 @@
              RTVJOBA    USER(&USERID)
              ENDDO
 
-             /* Submit the PostgreSQL startup */
+             /* Submit the PostgreSQL shutdown */
              SBMJOB     CMD(QSHEXEC CMDLINE('pg_ctl -D +
-                          /postgres start') SETPKGPATH(*YES) +
-                          PRTSTDOUT(*YES) PRTSPLF(STRPOSTGR) +
-                          PASEJOBNAM(PSTHREAD)) JOB(STRPOSTGR) +
+                          /postgres stop') SETPKGPATH(*YES) +
+                          DSPSTDOUT(*NO) PRTSTDOUT(*YES) +
+                          PRTSPLF(ENDPOSTGR)) JOB(ENDPOSTGR) +
                           JOBQ(QUSRNOMAX) USER(&USERID) +
                           JOBMSGQFL(*WRAP)
 
              SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) +
-                          MSGDTA('PostgreSQL startup job +
+                          MSGDTA('PostgreSQL shutdown job +
                           submitted') MSGTYPE(*COMP)
 
              RETURN
 ERRORS:
              SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) MSGDTA('Error +
-                          occurred starting PostgreSQL. Check the +
+                          occurred ending PostgreSQL. Check the +
                           job log') MSGTYPE(*ESCAPE)
 
              ENDPGM

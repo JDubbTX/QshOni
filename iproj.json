@@ -1,0 +1,11 @@
+{
+    "version": "0.0.1",
+    "description": "QSHONI",
+    "objlib": "&objlib",
+    "curlib": "&objlib",
+    "preUsrlibl": "",
+    "postUsrlibl": "",
+    "setIBMiEnvCmd": [""],
+    "repository" : "https://github.com/richardschoen/QshOni",
+    "tgtccsid" : 37
+}

@@ -1,0 +1,19 @@
+             CMD        PROMPT('Create Program With QTEMP File')
+             PARM       KWD(SQLQRY) TYPE(*CHAR) LEN(1000) MIN(1) +
+                          PROMPT('SQL Query')
+             PARM       KWD(TMPFILE) TYPE(*CHAR) LEN(10) MIN(1) +
+                          PROMPT('QTEMP File Name')
+             PARM       KWD(PGMNAME) TYPE(*CHAR) LEN(10) MIN(1) +
+                          PROMPT('Program Name')  
+             PARM       KWD(SRCTYPE) TYPE(*CHAR) LEN(10) DFT(CLLE) +
+                          RSTD(*YES) VALUES(CLLE CLP RPGLE RPG) +
+                          PROMPT('Program Source Type')
+             PARM       KWD(SRCPATH) TYPE(*CHAR) LEN(250) +
+                          PROMPT('Path to IFS Source File')
+             PARM       KWD(REPLACE) TYPE(*CHAR) LEN(4) RSTD(*YES) +
+                          DFT(*YES) VALUES(*YES *NO) +
+                          PROMPT('Replace Program')
+             PARM   KWD(TGTRLS) TYPE(*CHAR) LEN(8) RSTD(*YES) +
+                      DFT(*CURRENT)  +
+                      VALUES(*CURRENT *PRV *V7R3M0 *V7R4M0 *V7R5M0) +
+                      PROMPT('Target Release')

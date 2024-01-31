@@ -1,11 +1,10 @@
-/* Text: Start NGINX Web Server */
-             PGM        PARM(&NGINXBIN &NGCONFDIR &NGINXCONF +
-                          &DSPSTDOUT &LOGSTDOUT &PRTSTDOUT &DLTSTDOUT)
+/* Text: End NGINX Web Server */
+             PGM        PARM(&NGINXBIN &DSPSTDOUT &LOGSTDOUT +
+                          &PRTSTDOUT &DLTSTDOUT)
+             DCLPRCOPT  TEXT('End NGINX Web Server')
 
              DCL        VAR(&CMD) TYPE(*CHAR) LEN(5000)
              DCL        VAR(&NGINXBIN) TYPE(*CHAR) LEN(255)
-             DCL        VAR(&NGCONFDIR) TYPE(*CHAR) LEN(255)
-             DCL        VAR(&NGINXCONF) TYPE(*CHAR) LEN(255)
              DCL        VAR(&DSPSTDOUT) TYPE(*CHAR) LEN(4)
              DCL        VAR(&LOGSTDOUT) TYPE(*CHAR) LEN(4)
              DCL        VAR(&PRTSTDOUT) TYPE(*CHAR) LEN(4)
@@ -20,10 +19,11 @@
              MONMSG     MSGID(CPF0000) EXEC(GOTO CMDLBL(ERRORS))
 
 /*----------------------------------------------------------------------------*/
-/* Call stop nginx via QSHEXEC */
+/* Call stop nginx via QSHEXEC.                                               */
+/* We use kill to locate the nginx process id file and kill the job.          */
 /*----------------------------------------------------------------------------*/
-             CHGVAR     VAR(&CMD) VALUE(&NGINXBIN *BCAT '-c' *BCAT +
-                          &NGCONFDIR *TCAT '/' *TCAT &NGINXCONF)
+             CHGVAR     VAR(&CMD) VALUE('kill -QUIT $( cat +
+                          /QOpenSys/etc/nginx/logs/nginx.pid )')
 
              QSHEXEC CMDLINE(&CMD) DSPSTDOUT(&DSPSTDOUT) +
                           LOGSTDOUT(&LOGSTDOUT) +
@@ -31,7 +31,7 @@
                           DLTSTDOUT(&DLTSTDOUT) PRTSPLF(ENDNGINX)
 
              SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) MSGDTA('NGINX +
-                          server start completed normally') +
+                          server end completed normally') +
                           MSGTYPE(*COMP)
 
              RETURN
@@ -42,7 +42,7 @@ ERRORS:
 
              /* Send error escape message */
              SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) MSGDTA('Errors +
-                          occurred while starting NGINX. Check the +
+                          occurred while ending NGINX. Check the +
                           joblog') MSGTYPE(*ESCAPE)
 
              ENDPGM

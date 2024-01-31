@@ -13,13 +13,27 @@ dashes="------------------------------------------------------------------------
 function cpy_member
 {
 # ----------------------------------------------------------------
-# Copy source member and set source type
+# Copy source member and set source type and text
 # ----------------------------------------------------------------
-  CURFILE=`basename ${CURFILEPATH}`
+  CURFILE=`basename "${CURFILEPATH}"`
   SRCMEMBER=`echo "${CURFILE^^}" | cut -d'.' -f1`  # Parse PC file name prefix to member name
-  SRCTYPE=`echo "${CURFILE^^}" | cut -d'.' -f2`    # Parse PC file name extenstion to souce type
+  SRCTYPE=`echo "${CURFILE^^}" | cut -d'.' -f2 | sed 's/SRC//'`  # Parse PC file name extenstion to souce type
   system -v "CPYFRMSTMF FROMSTMF('${PWD}/${CURFILEPATH}') TOMBR('/QSYS.LIB/${SRCLIB}.LIB/${SRCFILE}.FILE/${SRCMEMBER}.MBR') MBROPT(*REPLACE) DBFCCSID(*FILE)"
+  PGMOBJ=$SRCMEMBER.$SRCTYPE
+  DIRNAME=$(dirname "$CURFILEPATH")
+  if [ $SRCTYPE = "CMD" ] ; then SRCTEXT=$(grep "$PGMOBJ: TEXT" "$DIRNAME"/Rules.mk | sed 's/.*= //'); fi
   system -v "CHGPFM FILE(${SRCLIB}/${SRCFILE}) MBR($SRCMEMBER) SRCTYPE(${SRCTYPE}) TEXT('${SRCTEXT}')" 
+
+}
+
+function set_type_and_text
+{
+# ----------------------------------------------------------------
+# Set Source Type and Text
+# ----------------------------------------------------------------
+  
+
+  
 }
 
 echo "$dashes"
@@ -31,7 +45,7 @@ system -v "CLRLIB LIB(${SRCLIB})"
 system -v "CRTSRCPF FILE(${SRCLIB}/${SRCFILE}) RCDLEN(120) CCSID(${SRCCCSID})"
 
 # Copy all the source members and set source types
-CURFILEPATH="qcmdsrc/QSHBASH.CMD"
+CURFILEPATH="qcmdsrc/QSHBASH.CMDSRC"
 SRCTEXT="Run Bash Command via Qshell"
 cpy_member
 

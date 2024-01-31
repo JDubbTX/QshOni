@@ -1,8 +1,8 @@
 /* Create and set data area for version                      */
              CRTDTAARA  DTAARA(VERSION) TYPE(*CHAR) LEN(30) +
-                          VALUE(&VERSION) TEXT(&DESTLIB |> 'version')
+                          VALUE(&VERSION) TEXT(&DESTLIB *BCAT 'version')
              CRTDTAARA  DTAARA(VERSION) TYPE(*CHAR) LEN(30) +
-                          VALUE(&VERSION) TEXT(&DESTLIB |> 'version')
+                          VALUE(&VERSION) TEXT(&DESTLIB *BCAT 'version')
              MONMSG     MSGID(CPF0000)
              CHGDTAARA  DTAARA(&DESTLIB/VERSION *ALL) VALUE(&VERSION)
 

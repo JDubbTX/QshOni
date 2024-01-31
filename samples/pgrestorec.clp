@@ -15,16 +15,16 @@
 
 /* Build pg_restore command line for selected database restore */
              CHGVAR     VAR(&CMDLINE) +
-                          VALUE('/QOpenSys/pkgs/bin/pg_restore' |> +
-                          &OPTIONS |> '-d' |> &DATABASE |> ' ' |> +
+                          VALUE('/QOpenSys/pkgs/bin/pg_restore' *BCAT +
+                          &OPTIONS *BCAT '-d' *BCAT &DATABASE *BCAT ' ' *BCAT +
                           &INPUTFILE)
 
 /* Make sure Postgres dump file exists for restore */
-             QSHONI/QSHIFSCHK FILNAM(&INPUTFILE)
+             QSHIFSCHK FILNAM(&INPUTFILE)
              /* Not found. Bail out */
              MONMSG     MSGID(CPF9898) EXEC(DO)
              SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) MSGDTA('Input +
-                          Postgres backup file' |> &INPUTFILE |> +
+                          Postgres backup file' *BCAT &INPUTFILE *BCAT +
                           'not found. Postgres pg_restore +
                           cancelled') MSGTYPE(*ESCAPE)
              ENDDO
@@ -35,19 +35,19 @@
 /* Run the pg_restore to restore Postgres database from backup file           */
 /* Use QSHBASH because of potential issues with CCSID 37 from raw QShell call */
              IF         COND(&PROMPT *EQ *YES) THEN(DO)
-             ?          QSHONI/QSHBASH ??CMDLINE(&CMDLINE) +
+             ?          QSHBASH ??CMDLINE(&CMDLINE) +
                           ??SETPKGPATH(*YES) ??DSPSTDOUT(*YES) +
                           ??PRTSTDOUT(*YES) ??PRTSPLF(PGRESTOREC)
              ENDDO
              IF         COND(&PROMPT *NE *YES) THEN(DO)
-             QSHONI/QSHBASH CMDLINE(&CMDLINE) SETPKGPATH(*YES) +
+             QSHBASH CMDLINE(&CMDLINE) SETPKGPATH(*YES) +
                           DSPSTDOUT(*NO) PRTSTDOUT(*YES) +
                           PRTSPLF(PGRESTOREC)
              ENDDO
 
              SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) +
-                          MSGDTA('Postgres database' |> &DATABASE +
-                          |> 'was restored from' |> &INPUTFILE |> +
+                          MSGDTA('Postgres database' *BCAT &DATABASE +
+                          *BCAT 'was restored from' *BCAT &INPUTFILE *BCAT +
                           'successfully') MSGTYPE(*COMP)
 
              RETURN

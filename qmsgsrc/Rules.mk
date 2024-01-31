@@ -1,0 +1,1 @@
+qshmsg.msgf: qshmsg.msgf

@@ -1,0 +1,52 @@
+/* File name: QSHCRTWTMC  */
+/* Source type: CLLE */
+/* Description: Run a create command for a program that requires */
+/*              a file in QTEMP                                  */
+/*              Provide a SQL Query and a file name - the file   */
+/*              The output of the SQL will be the definition of  */
+/*              the file in QTEMP                                */
+
+PGM PARM(&SQLQRY &TMPFILE &PGMNAME &SRCTYPE &SRCPATH &REPLACE &TGTRLS)
+DCLPRCOPT TEXT('Create Program with a file definition in QTEMP')
+
+DCL VAR(&SQLQRY) TYPE(*CHAR) LEN(1000)
+DCL VAR(&TMPFILE) TYPE(*CHAR) LEN(10)
+DCL VAR(&PGMNAME) TYPE(*CHAR) LEN(10)
+DCL VAR(&SRCTYPE) TYPE(*CHAR) LEN(10)
+DCL VAR(&SRCPATH) TYPE(*CHAR) LEN(250)
+DCL VAR(&REPLACE) TYPE(*CHAR) LEN(4)
+DCL VAR(&TGTRLS) TYPE(*CHAR) LEN(8)
+
+DCL VAR(&LEN) TYPE(*DEC) LEN(5 0)
+DCL VAR(&LEN2) TYPE(*DEC) LEN(15 5)
+DCL VAR(&SQL) TYPE(*CHAR) LEN(1000)
+DCL VAR(&CMD) TYPE(*CHAR) LEN(1000)
+DCL VAR(&QT) TYPE(*CHAR) LEN(1) VALUE('''')
+
+/* CHGVAR VAR(&CMD) VALUE('QSHQRYTMP SQL(' *TCAT &SQL *TCAT ') +
+                        OUTFILE(QTEMP/TCPTMPEND)') */
+CHGVAR VAR(&CMD) +
+    VALUE('QSHQRYTMP SQL(' *TCAT &QT *TCAT &SQLQRY *TCAT &QT *TCAT ') +
+    OUTFILE(QTEMP/' *TCAT &TMPFILE *TCAT ')')
+
+RTVMSG MSGID(CPF9897) MSGF(QCPFMSG) MSGDTA(&CMD) MSGLEN(&LEN)
+
+/* Length must be passed to QCMDEXEC in a *DEC (15.5) */
+CHGVAR VAR(&LEN2) VALUE(&LEN)
+
+/* IF SQL was passed, calculate length and run it to put an object into QTEMP */
+/* CALL PGM(QCMDEXC) PARM('QSHQRYTMP SQL(''SELECT JOB_NAME FROM QSYS2.NETSTAT_JOB_INFO'') +
+                        OUTFILE(QTEMP/TCPTMPEND)' 85) */
+CALL PGM(QCMDEXC) PARM(&CMD &LEN2)
+
+IF COND(%TRIM(&SRCTYPE) *EQ 'CLLE') THEN(DO)
+   CRTBNDCL PGM(&PGMNAME) +
+        SRCSTMF(&SRCPATH) +
+        REPLACE(&REPLACE) +
+        TGTRLS(&TGTRLS)
+ENDDO
+
+/* TODO: Handle other source types, forward messages */
+
+PGMEND:
+ENDPGM

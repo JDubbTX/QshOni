@@ -138,4 +138,16 @@ V1.0.26 = 12/24/2023
 -Created QSHCPYSRC command to copy source member to IFS file.         
  This will allow developers to store Python and other script files    
  in a source physical file if desired and copy to IFS at runtime      
- as a temporary file.                                                 
+ as a temporary file.
+
+V1.0.27 = 1/24/2024 (John Weirich)
+-Organize source files into subdirectories.  
+-Add build option with Bob while (todo) retaining existing build options.
+-Represent data areas and message files in pseudo-src.
+-Replace all |< and |> with *TCAT and *BCAT for better support
+ of multinational character sets
+-Make all CL programs ILE (CLLE)
+-Move text description for CLLE programs to CLLE source using
+ DCLPRCOPT
+-Move text definition for commands to QCMDSRC/rules.mk
+
