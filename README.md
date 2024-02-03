@@ -843,4 +843,24 @@ The special prefix format we look for in the STDOUT log to return values from ST
 ```RETURNPARM07: I am return value 7```   
 ```RETURNPARM08: I am return value 8```   
 ```RETURNPARM09: I am return value 9```   
-```RETURNPARM10: I am return value 10```   
+```RETURNPARM10: I am return value 10```
+
+# QSHCRTWTMP command parms (work in progress)
+
+**Overview** - Raise your hand if you have ever maintained a program that wouldn't compile unless a temporary file existed in the library list at compile time.  If you raised your hand, this command is for you.  Utilizing  **QSHQRYTMP** comand, this command will use whatever SQL you give it to create a file in QTEMP prior to building your CL or RPG program.
+
+**SQLQRY** - Provide a SQL select statement.  The result set will become a file in QTEMP prior to the compilation of the program.
+
+**TMPFILE** - The name of the file to create in QTEMP, as required by the program being compiled.
+
+**PGMNAME** - Name of the program to compile
+**SRCTYPE** - CLLE, CLP, RPGLE, or RPG (only CLLE is supported for now)
+
+**SRCPATH** - The full or relative path to the program source file.
+
+**REPLACE** - *YES to replace an existing program, *NO to not replace it
+
+**TGTRLS** - Same as on CRTBNDCL, CRTCLPGM, etc...
+
+
+

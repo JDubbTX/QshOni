@@ -4,10 +4,10 @@
 # Author: Richard Schoen
 # Purpose: Create QSHONI library, copies source members and compiles objects
 #----------------------------------------------------------------
-SRCLIB="QSHONI"
-SRCLIBTEXT="QShell on IBM i"
-SRCFILE="SOURCE"
-SRCCCSID="37"
+src_lib="QSHONI"
+src_lib_text="QShell on IBM i"
+src_file="SOURCE"
+src_CCSID="37"
 dashes="---------------------------------------------------------------------------"
 
 function cpy_member
@@ -15,236 +15,197 @@ function cpy_member
 # ----------------------------------------------------------------
 # Copy source member and set source type and text
 # ----------------------------------------------------------------
-  CURFILE=`basename "${CURFILEPATH}"`
-  SRCMEMBER=`echo "${CURFILE^^}" | cut -d'.' -f1`  # Parse PC file name prefix to member name
-  SRCTYPE=`echo "${CURFILE^^}" | cut -d'.' -f2 | sed 's/SRC//'`  # Parse PC file name extenstion to souce type
-  system -v "CPYFRMSTMF FROMSTMF('${PWD}/${CURFILEPATH}') TOMBR('/QSYS.LIB/${SRCLIB}.LIB/${SRCFILE}.FILE/${SRCMEMBER}.MBR') MBROPT(*REPLACE) DBFCCSID(*FILE)"
-  PGMOBJ=$SRCMEMBER.$SRCTYPE
-  DIRNAME=$(dirname "$CURFILEPATH")
-  if [ $SRCTYPE = "CMD" ] ; then SRCTEXT=$(grep "$PGMOBJ: TEXT" "$DIRNAME"/Rules.mk | sed 's/.*= //'); fi
-  system -v "CHGPFM FILE(${SRCLIB}/${SRCFILE}) MBR($SRCMEMBER) SRCTYPE(${SRCTYPE}) TEXT('${SRCTEXT}')" 
-
+  cur_file=`basename "${cur_file_path}"`
+  src_member=`echo "${cur_file^^}" | cut -d'.' -f1`  # Parse PC file name prefix to member name
+  src_type=`echo "${cur_file^^}" | cut -d'.' -f2 | sed 's/SRC//'`  # Parse PC file name extenstion to souce type
+  system -v "CPYFRMSTMF FROMSTMF('${PWD}/${cur_file_path}') TOMBR('/QSYS.LIB/${src_lib}.LIB/${src_file}.FILE/${src_member}.MBR') MBROPT(*REPLACE) DBFCCSID(*FILE)"
+ # Get the object name with its type so we can search Rules.mk for it
+  OBJ=$src_member.$src_type
+  DIRNAME=$(dirname "$cur_file_path")
+  get_member_text
+  system -v "CHGPFM FILE(${src_lib}/${src_file}) MBR($src_member) SRCTYPE(${src_type}) TEXT('${src_text}')" 
 }
-
-function set_type_and_text
+function get_member_text
 {
-# ----------------------------------------------------------------
-# Set Source Type and Text
-# ----------------------------------------------------------------
-  
+  case $src_type in
 
-  
+    CMD)
+      src_text=$(grep "$OBJ: TEXT" "$DIRNAME"/Rules.mk | sed 's/.*= //')
+      ;;
+    CLLE RPGLE)
+      src_text=$(grep -oP "(?<=DCLPRCOPT TEXT\(')[^']+" $cur_file_path)
+    DTAARA)
+      src_text=$(awk -v RS='\\<TEXT[(]\047(([^\047]|\047\047)+)\047[)]' 'RT{$0=RT; gsub(/^[^\047]+\047|\047[^\047]+$/,""); gsub(/\+\n/,""); print}' $cur_file_path)
+      ;;
+  esac
+
 }
 
 echo "$dashes"
-echo "Starting Build of ${SRCLIBTEXT} library ${SRCLIB}"
+echo "Starting Build of ${src_lib_text} library ${src_lib}"
 
 # Create library, clear library and create source file 
-system -v "CRTLIB ${SRCLIB} TYPE(*PROD) TEXT('${SRCLIBTEXT}')"
-system -v "CLRLIB LIB(${SRCLIB})"
-system -v "CRTSRCPF FILE(${SRCLIB}/${SRCFILE}) RCDLEN(120) CCSID(${SRCCCSID})"
+system -v "CRTLIB ${src_lib} TYPE(*PROD) TEXT('${src_lib_text}')"
+system -v "CLRLIB LIB(${src_lib})"
+system -v "CRTSRCPF FILE(${src_lib}/${src_file}) RCDLEN(120) CCSID(${src_CCSID})"
 
 # Copy all the source members and set source types
-CURFILEPATH="qcmdsrc/QSHBASH.CMDSRC"
-SRCTEXT="Run Bash Command via Qshell"
+cur_file_path="qcmdsrc/QSHBASH.CMDSRC"
 cpy_member
 
-CURFILEPATH="qcllesrc/QSHBASHC.CLLE"              
-SRCTEXT="Run Bash Command via Qshell"                            
+cur_file_path="qcllesrc/QSHBASHC.PGM.CLLE"              
 cpy_member
 
-CURFILEPATH="qcmdsrc/QSHEXEC.CMD"                
-SRCTEXT="Run QShell Command Line"                          
+cur_file_path="qcmdsrc/QSHEXEC.CMDSRC"                
 cpy_member
 
-CURFILEPATH="qcllesrc/QSHEXECC.CLLE"
-SRCTEXT="Run QShell Command Line"
+cur_file_path="qcllesrc/QSHEXECC.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="qclsrc/QSHLOGSCAC.CLP"
-SRCTEXT="Scan Qshell Log File for Value"  
+cur_file_path="qclsrc/QSHLOGSCAC.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="QSHLOGSCAN.CMD"
-SRCTEXT="Scan Qshell Log File for Value"
+cur_file_path="qcmdsrc/QSHLOGSCAN.CMDSRC"
 cpy_member
 
-CURFILEPATH="QSHLOGSCAR.RPGLE"
-SRCTEXT="Scan Qshell Log File for Value"
+cur_file_path="qrpglesrc/QSHLOGSCAR.PGM.RPGLE"
 cpy_member
 
-CURFILEPATH="QSHPATH.CMD"
-SRCTEXT="Set Open Source Package Path Environment Variables"
+cur_file_path="qcmdsrc/QSHPATH.CMDSRC"
 cpy_member
 
-CURFILEPATH="qcllesrc/QSHPATHC.CLLE"
-SRCTEXT="Set Open Source Package Path Environment Variables"
+cur_file_path="qcllesrc/QSHPATHC.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="QSHSTDOUTR.RPGLE"
-SRCTEXT="Read and parse stdout log"
+cur_file_path="qrpglesrc/QSHSTDOUTR.PGM.RPGLE"
 cpy_member
 
-CURFILEPATH="QSHIFSCHKR.RPGLE"
-SRCTEXT="Check for IFS File Existence"
+cur_file_path="qrpglesrc/QSHIFSCHKR.PGM.RPGLE"
 cpy_member
 
-CURFILEPATH="qclsrc/QSHIFSCHKC.CLP"
-SRCTEXT="Check for IFS File Existence"
+cur_file_path="qclsrc/QSHIFSCHKC.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="QSHIFSCHK.CMD"
-SRCTEXT="Check for IFS File Existence"
+cur_file_path="qcmdsrc/QSHIFSCHK.CMDSRC"
 cpy_member
 
-CURFILEPATH="QSHPYRUN.CMD"
-SRCTEXT="Run Python Script via Qshell"
+cur_file_path="qcmdsrc/QSHPYRUN.CMDSRC"
 cpy_member
 
-CURFILEPATH="qcllesrc/QSHPYRUNC.CLLE"
-SRCTEXT="Run Python Script via Qshell"
+cur_file_path="qcllesrc/QSHPYRUNC.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="QSHDEMO01R.RPGLE"
-SRCTEXT="Read Outfile STDOUTQSH and display via DSPLY cmd"
+cur_file_path="qrpglesrc/QSHDEMO01R.PGM.RPGLE"
 cpy_member
 
-CURFILEPATH="QSHQRYTMP.CMD"
-SRCTEXT="SQL Query Data to Selected Temp Table with RUNSQL"
+cur_file_path="qcmdsrc/QSHQRYTMP.CMDSRC"
 cpy_member
 
-CURFILEPATH="qclsrc/QSHQRYTMPC.CLP"
-SRCTEXT="SQL Query Data to Selected Temp Table with RUNSQL"
+cur_file_path="qcllesrc/QSHQRYTMPC.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="QSHCURL.CMD"
-SRCTEXT="Run Curl Command via QShell"
+cur_file_path="qcmdsrc/QSHCURL.CMDSRC"
 cpy_member
 
-CURFILEPATH="qclsrc/QSHCURLC.CLP"
-SRCTEXT="Run Curl Command via QShell"
+cur_file_path="qcllesrc/QSHCURLC.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="QSHPORTCHK.CMD"
-SRCTEXT="Check for active TCP/IP Local Port"
+cur_file_path="qcmdsrc/QSHPORTCHK.CMDSRC"
 cpy_member
 
-CURFILEPATH="qclsrc/QSHPORTCHC.CLP"
-SRCTEXT="Check for active TCP/IP Local Port"
+cur_file_path="qcllesrc/QSHPORTCHC.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="QSHPORTEND.CMD"
-SRCTEXT="End All Jobs for Active TCP/IP Local Port"
+cur_file_path="qcmdsrc/QSHPORTEND.CMDSRC"
 cpy_member
 
-CURFILEPATH="qclsrc/QSHPORTENC.CLP"
-SRCTEXT="End All Jobs for Active TCP/IP Local Port"
+cur_file_path="qcllesrc/QSHPORTENC.CLLE"
 cpy_member
 
-CURFILEPATH="qclsrc/QSHSETPROC.CLP"
-SRCTEXT="Set up .profile, .bash_profile and .bashrc files"
+cur_file_path="qcllesrc/QSHSETPROC.CLLE"
 cpy_member
 
-CURFILEPATH="QSHSETPROF.CMD"
-SRCTEXT="Set up .profile, .bash_profile and .bashrc files"
+cur_file_path="qcmdsrc/QSHSETPROF.CMDSRC"
 cpy_member
 
-CURFILEPATH="QSHBASHRC.TXT"
-SRCTEXT="User .bashrc bash template for Opn Src Pkgs"
+cur_file_path="QSHBASHRC.TXT"
+src_text="User .bashrc bash template for Opn Src Pkgs"
 cpy_member
 
-CURFILEPATH="QSHBASHPRF.TXT"
-SRCTEXT="User .bash_profile bash template for Opn Src Pkgs"
+cur_file_path="QSHBASHPRF.TXT"
+src_text="User .bash_profile bash template for Opn Src Pkgs"
 cpy_member
 
-CURFILEPATH="QSHPROFILE.TXT"
-SRCTEXT="User QShell .profile template for Opn Src Pkgs"
+cur_file_path="QSHPROFILE.TXT"
+src_text="User QShell .profile template for Opn Src Pkgs"
 cpy_member
 
-CURFILEPATH="QSHEXECSRC.CMD"                
-SRCTEXT="Run QShell .sh script from Source File Member"
+cur_file_path="qcmdsrc/QSHEXECSRC.CMDSRC"
 cpy_member
 
-CURFILEPATH="qcllesrc/QSHEXECSCC.CLLE"
-SRCTEXT="Run QShell .sh script from Source File Member"
+cur_file_path="qcllesrc/QSHEXECSCC.CLLE"
 cpy_member
 
-CURFILEPATH="DB2UTIL.CMD"                
-SRCTEXT="Execute db2util Query to IFS Output File via bash"
+cur_file_path="DB2UTIL.CMDSRC"                
 cpy_member
 
-CURFILEPATH="qcllesrc/DB2UTILC.CLLE"
-SRCTEXT="Execute db2util Query to IFS Output File via bash"
+cur_file_path="qcllesrc/DB2UTILC.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="QSHPYCALL.CMD"
-SRCTEXT="Run Python Script via Qshell and Return Parms"
+cur_file_path="qcmdsrc/QSHPYCALL.CMDSRC"
 cpy_member
 
-CURFILEPATH="qcllesrc/QSHPYCALLC.CLLE"
-SRCTEXT="Run Python Script via Qshell and Return Parms"
+cur_file_path="qcllesrc/QSHPYCALLC.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="qcllesrc/QSHPYCALLT.CLLE"
-SRCTEXT="Test Call to QSHPYCALL"
+cur_file_path="qcllesrc/QSHPYCALLT.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="QSHGETPARM.CMD"
-SRCTEXT="Scan Qshell Log File for Parameter Values"
+cur_file_path="qcmdsrc/QSHGETPARM.CMDSRC"
 cpy_member
 
-CURFILEPATH="QSHGETPARR.RPGLE"
-SRCTEXT="Run Python Script via Qshell and Return Parms"
+cur_file_path="qrpglesrc/QSHGETPARR.PGM.RPGLE"
 cpy_member
 
-CURFILEPATH="QSHPHPRUN.CMD"
-SRCTEXT="Run PHP Script via QShell"
+cur_file_path="QSHPHPRUN.CMDSRC"
 cpy_member
 
-CURFILEPATH="qcllesrc/QSHPHPRUNC.CLLE"
-SRCTEXT="Run PHP Script via QShell"
+cur_file_path="qcllesrc/QSHPHPRUNC.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="QSHCALL.CMD"
-SRCTEXT="Run QShell Command Line and Return Parms"
+cur_file_path="qcmdsrc/QSHCALL.CMDSRC"
 cpy_member
 
-CURFILEPATH="qcllesrc/QSHCALLC.CLLE"
-SRCTEXT="Run QShell Command Line and Return Parms"
+cur_file_path="qcllesrc/QSHCALLC.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="QSHCALLT.CLLE"
-SRCTEXT="Test Call to QSHCALL"
+cur_file_path="QSHCALLT.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="qcllesrc/QSHCALLT.CLLE"
-SRCTEXT="Test Call to QSHCALL"
+cur_file_path="qcllesrc/QSHCALLT.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="QSHCPYSRC.CMD"
-SRCTEXT="Copy Source Member to IFS File"
+cur_file_path="qcmdsrc/QSHCPYSRC.CMDSRC"
 cpy_member
 
-CURFILEPATH="qcllesrc/QSHCPYSRCC.CLLE"
-SRCTEXT="Copy Source Member to IFS File"
+cur_file_path="qcllesrc/QSHCPYSRCC.PGM.CLLE"
 cpy_member
 
-CURFILEPATH="qclsrc/SRCBLDC.CLP"
-SRCTEXT="Build cmds from QSHONI/SOURCE file"   
+cur_file_path="qcllesrc/SRCBLDC.PGM.CLLE"
 cpy_member
 
-CURFILE="README.TXT"
-SRCTEXT="Read Me Docs on Setup"
+cur_file="README.TXT"
+src_text="Read Me Docs on Setup"
 cpy_member
 
-CURFILE="VERSION.TXT"
-SRCTEXT="Version Notes"
+cur_file="VERSION.TXT"
+src_text="Version Notes"
 cpy_member
 
 # Create and run build program
-system -q "CRTCLPGM PGM(${SRCLIB}/SRCBLDC) SRCFILE(${SRCLIB}/${SRCFILE})"
-system -v "CALL PGM(${SRCLIB}/SRCBLDC)"
+system -q "CRTBNDCL PGM(${src_lib}/SRCBLDC) src_file(${src_lib}/${src_file})"
+system -v "CALL PGM(${src_lib}/SRCBLDC)"
 
-echo "${SRCLIBTEXT} library ${SRCLIB} was created and programs compiled."
+echo "${src_lib_text} library ${src_lib} was created and programs compiled."
 echo "$dashes"
   
